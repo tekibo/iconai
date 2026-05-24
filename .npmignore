@@ -1,0 +1,14 @@
+.gitignore
+.vscode/
+.idea/
+node_modules/
+src/
+scripts/
+tsconfig.json
+webpack.config.js
+*.ts
+*.md
+!README.md
+!LICENSE
+test-output/
+assets/

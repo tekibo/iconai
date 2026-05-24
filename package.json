@@ -1,0 +1,59 @@
+{
+  "name": "iconai",
+  "version": "0.0.1",
+  "description": "AI-powered icon generation CLI for mobile app developers",
+  "main": "dist/index.js",
+  "type": "module",
+  "bin": {
+    "iconai": "./bin/iconai"
+  },
+  "scripts": {
+    "build": "tsup",
+    "build:watch": "tsup --watch",
+    "dev": "tsx src/index.tsx"
+  },
+  "keywords": [
+    "icon",
+    "app-icon",
+    "ai",
+    "cli",
+    "mobile",
+    "expo",
+    "react-native",
+    "dall-e"
+  ],
+  "author": {
+    "name": "Tekibo",
+    "email": "tekibo@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tekibo/iconai.git"
+  },
+  "bugs": {
+    "url": "https://github.com/tekibo/iconai/issues"
+  },
+  "homepage": "https://github.com/tekibo/iconai#readme",
+  "license": "MIT",
+  "private": false,
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "@imgly/background-removal-node": "^1.4.5",
+    "ai": "^6.0.191",
+    "fs-extra": "^11.3.5",
+    "ink": "^7.0.4",
+    "png-to-ico": "^3.0.1",
+    "react": "^19.2.6",
+    "sharp": "^0.34.5",
+    "tsx": "^4.22.3"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.4",
+    "@types/node": "^25.9.1",
+    "@types/react": "^19.2.15",
+    "tsup": "^8.5.1",
+    "typescript": "^6.0.3"
+  }
+}

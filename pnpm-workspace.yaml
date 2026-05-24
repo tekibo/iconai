@@ -1,0 +1,6 @@
+allowBuilds:
+  esbuild: set this to true or false
+  onnxruntime-node: true
+  sharp: true
+minimumReleaseAgeExclude:
+  - ink@7.0.4
