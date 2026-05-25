@@ -61,7 +61,7 @@ Grok Imagine, Seedream, Imagen, Recraft
 
 ## API key
 
-Required only for AI generation. Stored locally at `~/.iconai/config.json`. Press `c` from the generator to set or update it.
+**Vercel AI gateway API** key is required for AI generation. Stored locally at `~/.iconai/config.json`. Press `c` from the generator to set or update it.
 
 ---
 

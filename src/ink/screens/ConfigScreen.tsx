@@ -18,7 +18,7 @@ export default function ConfigScreen({ apiKey, onChange, onSubmit, onQuit, curre
   });
 
   const title = currentKey ? 'Change API key' : 'API key not configured.';
-  const help = currentKey ? 'Enter new key (Esc to cancel):' : 'Enter your gateway API key (Esc to quit):';
+  const help = currentKey ? 'Enter new key (Esc to cancel):' : 'Enter your Vercel AI Gateway API key (Esc to quit):';
 
   return (
     <Box flexDirection="column" paddingY={1}>
@@ -36,7 +36,7 @@ export default function ConfigScreen({ apiKey, onChange, onSubmit, onQuit, curre
       </Box>
       <Box>
         <Text color="cyan">&gt; </Text>
-        <Text>{apiKey.length === 0 ? <Text dimColor>paste or type your key...</Text> : '•'.repeat(apiKey.length)}</Text>
+        <Text>{apiKey.length === 0 ? <Text dimColor>Paste or type your Vercel AI Gateway API key...</Text> : '•'.repeat(apiKey.length)}</Text>
       </Box>
       {apiKey.trim().length > 0 && (
         <Box marginTop={1}>
