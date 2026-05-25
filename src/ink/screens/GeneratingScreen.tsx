@@ -1,15 +1,15 @@
 import { Box, Text } from 'ink';
-import { PRESET_DEFINITIONS, MODELS, IconPreset } from '../../types';
+import { FORMAT_LABELS, IconPreset, MODELS, OutputFormat, PRESET_DEFINITIONS } from '../../types';
 import Spinner from '../components/Spinner';
 
 interface Props {
   preset: IconPreset;
   modelIdx: number;
   prompt: string;
-  convertingIco?: boolean;
+  outputFormat: OutputFormat;
 }
 
-export default function GeneratingScreen({ preset, modelIdx, prompt, convertingIco }: Props) {
+export default function GeneratingScreen({ preset, modelIdx, prompt, outputFormat }: Props) {
   const d = PRESET_DEFINITIONS[preset];
   const m = MODELS[modelIdx];
 
@@ -26,6 +26,10 @@ export default function GeneratingScreen({ preset, modelIdx, prompt, convertingI
         <Text dimColor>  {m.provider}</Text>
       </Box>
       <Box marginBottom={1}>
+        <Text bold>Format: </Text>
+        <Text color="green">{FORMAT_LABELS[outputFormat]}</Text>
+      </Box>
+      <Box marginBottom={1}>
         <Text bold>Prompt: </Text>
         <Text wrap="wrap">{prompt}</Text>
       </Box>
@@ -35,8 +39,8 @@ export default function GeneratingScreen({ preset, modelIdx, prompt, convertingI
         <Text bold>Generating...</Text>
       </Box>
       <Box>
-        {convertingIco && <Text dimColor>Converting to .ico...</Text>}
-        {!convertingIco && <Text dimColor>This may take a moment</Text>}
+        {outputFormat === 'ico' && <Text dimColor>Converting to .ico...</Text>}
+        {outputFormat !== 'ico' && <Text dimColor>This may take a moment</Text>}
       </Box>
     </Box>
   );

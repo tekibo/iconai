@@ -14,6 +14,5 @@ export default defineConfig({
     'react-devtools-core',
     'yoga-wasm-web',
     'sharp',
-    '@imgly/background-removal-node',
   ],
 });

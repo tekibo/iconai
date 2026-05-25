@@ -2,10 +2,10 @@ import { createGateway, generateImage } from 'ai';
 import fs from 'fs-extra';
 import path from 'path';
 import { ConfigService } from './config';
-import { GenerationOptions, IconPreset, PRESET_DEFINITIONS } from '../types';
+import { GenerationOptions, IconPreset, OutputFormat, PRESET_DEFINITIONS } from '../types';
 import { enhanceForIcon } from '../utils/prompts';
-import { icoSizes } from '../utils/imageTools';
-import { toIco } from './imageProcessor';
+import { extFromFormat, icoSizes } from '../utils/imageTools';
+import { convertFormat, toIco } from './imageProcessor';
 
 export class ImageService {
   private static async key(): Promise<string> {
@@ -47,45 +47,34 @@ export class ImageService {
   static async saveImages(
     base64DataArray: string[],
     outputDir: string,
-    outputFormat: string,
+    outputFormat: OutputFormat,
     preset: IconPreset
   ): Promise<string[]> {
     const outputPaths: string[] = [];
     const timestamp = Date.now();
     await fs.ensureDir(outputDir);
+    const def = PRESET_DEFINITIONS[preset];
 
-    const label = PRESET_DEFINITIONS[preset].label
+    const label = def.label
       .toLowerCase()
       .replace(/\s+/g, '-');
 
     for (let i = 0; i < base64DataArray.length; i++) {
       const buffer = Buffer.from(base64DataArray[i], 'base64');
-      const ext = detectFormat(buffer) || outputFormat || 'png';
+      const isIcoPreset = preset === 'web-icon' || preset === 'desktop-icon';
+      const output = outputFormat === 'ico'
+        ? await toIco(buffer, isIcoPreset ? icoSizes(preset) : [16, 32, 48, 256])
+        : await convertFormat(buffer, outputFormat, 85);
+      const ext = extFromFormat(outputFormat);
       const filename =
         base64DataArray.length === 1
           ? `${label}-${timestamp}.${ext}`
           : `${label}-${timestamp}-${i + 1}.${ext}`;
       const outputPath = path.join(outputDir, filename);
-      await fs.writeFile(outputPath, buffer);
+      await fs.writeFile(outputPath, output);
       outputPaths.push(outputPath);
-    }
-
-    const def = PRESET_DEFINITIONS[preset];
-    if (def.convertToIco && base64DataArray.length > 0) {
-      const buffer = Buffer.from(base64DataArray[0], 'base64');
-      const ico = await toIco(buffer, icoSizes(preset as 'web-icon' | 'desktop-icon'));
-      const icoPath = path.join(outputDir, `${preset}-${timestamp}.ico`);
-      await fs.writeFile(icoPath, ico);
-      outputPaths.push(icoPath);
     }
 
     return outputPaths;
   }
-}
-
-function detectFormat(buffer: Buffer): string | null {
-  if (buffer[0] === 0xFF && buffer[1] === 0xD8 && buffer[2] === 0xFF) return 'jpg';
-  if (buffer[0] === 0x89 && buffer[1] === 0x50 && buffer[2] === 0x4E) return 'png';
-  if (buffer[0] === 0x52 && buffer[1] === 0x49 && buffer[2] === 0x46) return 'webp';
-  return null;
 }

@@ -40,7 +40,6 @@
     "node": ">=18.0.0"
   },
   "dependencies": {
-    "@imgly/background-removal-node": "^1.4.5",
     "ai": "^6.0.191",
     "fs-extra": "^11.3.5",
     "ink": "^7.0.4",

@@ -1,4 +1,5 @@
 export type IconPreset = 'app-store-icon' | 'play-store-icon' | 'splash' | 'banner' | 'web-icon' | 'desktop-icon';
+export type OutputFormat = 'png' | 'jpeg' | 'webp' | 'ico';
 
 export type PresetDefinition = {
   label: string;
@@ -6,7 +7,7 @@ export type PresetDefinition = {
   height: number;
   aspectRatio: `${number}:${number}`;
   description: string;
-  convertToIco?: boolean;
+  defaultFormat?: OutputFormat;
 };
 
 export const PRESET_DEFINITIONS: Record<IconPreset, PresetDefinition> = {
@@ -43,28 +44,26 @@ export const PRESET_DEFINITIONS: Record<IconPreset, PresetDefinition> = {
     width: 256,
     height: 256,
     aspectRatio: '1:1',
-    description: 'Website favicon & web app icon (256x256, converted to .ico)',
-    convertToIco: true,
+    description: 'Website favicon & web app icon (256x256, defaults to .ico)',
+    defaultFormat: 'ico',
   },
   'desktop-icon': {
     label: 'Desktop Icon',
     width: 512,
     height: 512,
     aspectRatio: '1:1',
-    description: 'Desktop application icon (512x512, converted to .ico)',
-    convertToIco: true,
+    description: 'Desktop application icon (512x512, defaults to .ico)',
+    defaultFormat: 'ico',
   },
 };
 
 export type ModelId = typeof MODELS[number]['id'];
 
 export const MODELS = [
-  { id: 'bfl/flux-2-klein-9b', name: 'Flux 2 Klein 9B', provider: 'BFL' },
   { id: 'xai/grok-imagine-image', name: 'Grok Imagine', provider: 'xAI' },
   { id: 'bytedance/seedream-4.0', name: 'Seedream 4.0', provider: 'ByteDance' },
   { id: 'google/imagen-4.0-fast-generate-001', name: 'Imagen 4.0 Fast', provider: 'Google' },
   { id: 'recraft/recraft-v4.1', name: 'Recraft v4.1', provider: 'Recraft' },
-  { id: 'prodia/flux-fast-schnell', name: 'Flux Fast Schnell (Prodia)', provider: 'Prodia' },
 ] as const;
 
 export type ConfigData = {
@@ -73,20 +72,6 @@ export type ConfigData = {
 };
 
 export const PRESET_KEYS: IconPreset[] = ['app-store-icon', 'play-store-icon', 'splash', 'banner', 'web-icon', 'desktop-icon'];
-
-export type OutputFormat = 'png' | 'jpeg' | 'webp' | 'ico';
-
-export interface ToolOptions {
-  removeBg: boolean;
-  outputFormat: OutputFormat;
-  quality: number;
-}
-
-export interface ProcessingOptions {
-  inputPath: string;
-  outputDir: string;
-  tools: ToolOptions;
-}
 
 export const FORMAT_LABELS: Record<OutputFormat, string> = {
   png: 'PNG',

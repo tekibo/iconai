@@ -2,19 +2,22 @@ import { useEffect, useState } from 'react';
 import { Box } from 'ink';
 import { ConfigService } from '../services/config';
 import { ImageService } from '../services/image';
-import { MODELS, PRESET_KEYS, PRESET_DEFINITIONS } from '../types';
+import { MODELS, OutputFormat, PRESET_KEYS, PRESET_DEFINITIONS } from '../types';
 import { validateApiKey } from '../utils/validation';
 import Header from './components/Header';
 import LoadingScreen from './screens/LoadingScreen';
 import ConfigScreen from './screens/ConfigScreen';
 import GeneratorScreen from './screens/GeneratorScreen';
-import ToolsScreen from './screens/ToolsScreen';
 import GeneratingScreen from './screens/GeneratingScreen';
 import DoneScreen from './screens/DoneScreen';
 import ErrorScreen from './screens/ErrorScreen';
 
-type Screen = 'loading' | 'config' | 'generator' | 'tools' | 'generating' | 'done' | 'error';
+type Screen = 'loading' | 'config' | 'generator' | 'generating' | 'done' | 'error';
 type ConfigMode = 'initial' | 'change';
+
+function defaultFormatForPreset(idx: number): OutputFormat {
+  return PRESET_DEFINITIONS[PRESET_KEYS[idx]].defaultFormat ?? 'png';
+}
 
 export default function App() {
   const [screen, setScreen] = useState<Screen>('loading');
@@ -25,6 +28,7 @@ export default function App() {
   const [prompt, setPrompt] = useState('');
   const [presetIdx, setPresetIdx] = useState(0);
   const [modelIdx, setModelIdx] = useState(0);
+  const [outputFormat, setOutputFormat] = useState<OutputFormat>('png');
   const [count, setCount] = useState(1);
   const [configMode, setConfigMode] = useState<ConfigMode>('initial');
 
@@ -41,10 +45,6 @@ export default function App() {
     setScreen('config');
   }
 
-  function handleOpenTools() {
-    setScreen('tools');
-  }
-
   function handleConfigBack() {
     if (configMode === 'change') {
       setScreen('generator');
@@ -59,6 +59,11 @@ export default function App() {
     await ConfigService.set('gateway_api_key', key);
     setStoredKey(key);
     setScreen('generator');
+  }
+
+  function handlePresetChange(idx: number) {
+    setPresetIdx(idx);
+    setOutputFormat(defaultFormatForPreset(idx));
   }
 
   async function startGeneration() {
@@ -80,7 +85,7 @@ export default function App() {
         isTransparent: false,
       });
 
-      const paths = await ImageService.saveImages(images, './assets', 'png', preset);
+      const paths = await ImageService.saveImages(images, './assets', outputFormat, preset);
 
       setFiles(paths);
       setScreen('done');
@@ -90,20 +95,11 @@ export default function App() {
     }
   }
 
-  function handleToolsDone(outputFiles: string[]) {
-    setFiles(outputFiles);
-    setScreen('done');
-  }
-
-  function handleToolsError(msg: string) {
-    setError(msg);
-    setScreen('error');
-  }
-
   function resetAndRestart() {
     setPrompt('');
     setPresetIdx(0);
     setModelIdx(0);
+    setOutputFormat(defaultFormatForPreset(0));
     setCount(1);
     setFiles([]);
     setError('');
@@ -131,22 +127,16 @@ export default function App() {
         <GeneratorScreen
           presetIdx={presetIdx}
           modelIdx={modelIdx}
+          outputFormat={outputFormat}
           prompt={prompt}
           count={count}
-          onPresetChange={setPresetIdx}
+          onPresetChange={handlePresetChange}
           onModelChange={setModelIdx}
+          onOutputFormatChange={setOutputFormat}
           onPromptChange={setPrompt}
           onCountChange={setCount}
           onGenerate={startGeneration}
           onConfig={handleOpenConfig}
-          onTools={handleOpenTools}
-        />
-      )}
-      {screen === 'tools' && (
-        <ToolsScreen
-          onDone={handleToolsDone}
-          onError={handleToolsError}
-          onBack={() => setScreen('generator')}
         />
       )}
       {screen === 'generating' && (
@@ -154,7 +144,7 @@ export default function App() {
           preset={PRESET_KEYS[presetIdx]}
           modelIdx={modelIdx}
           prompt={prompt}
-          convertingIco={!!PRESET_DEFINITIONS[PRESET_KEYS[presetIdx]].convertToIco}
+          outputFormat={outputFormat}
         />
       )}
       {screen === 'done' && (
