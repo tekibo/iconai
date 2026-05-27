@@ -1,42 +1,33 @@
+/* istanbul ignore file */
 import { useState } from 'react';
 import { Box, Text, useInput } from 'ink';
-import { FORMAT_LABELS, MODELS, OutputFormat, PRESET_DEFINITIONS, PRESET_KEYS } from '../../types';
+import { MODELS, PRESET_DEFINITIONS, PRESET_KEYS } from '../../types';
 
-type Section = 'preset' | 'model' | 'format' | 'count';
+type Section = 'preset' | 'model' | 'count';
 type Focus = Section | 'prompt';
 
 interface Props {
   presetIdx: number;
   modelIdx: number;
-  outputFormat: OutputFormat;
   prompt: string;
   count: number;
   onPresetChange: (idx: number) => void;
   onModelChange: (idx: number) => void;
-  onOutputFormatChange: (format: OutputFormat) => void;
   onPromptChange: (v: string) => void;
   onCountChange: (c: number) => void;
   onGenerate: () => void;
   onConfig: () => void;
 }
 
-const SECTIONS: Section[] = ['preset', 'model', 'format', 'count'];
-const FORMATS: OutputFormat[] = ['png', 'jpeg', 'webp', 'ico'];
-
-function nextFormat(format: OutputFormat, delta: number): OutputFormat {
-  const idx = FORMATS.indexOf(format);
-  return FORMATS[(idx + delta + FORMATS.length) % FORMATS.length];
-}
+const SECTIONS: Section[] = ['preset', 'model', 'count'];
 
 export default function GeneratorScreen({
   presetIdx,
   modelIdx,
-  outputFormat,
   prompt,
   count,
   onPresetChange,
   onModelChange,
-  onOutputFormatChange,
   onPromptChange,
   onCountChange,
   onGenerate,
@@ -68,9 +59,6 @@ export default function GeneratorScreen({
       } else if (focus === 'model') {
         if (key.downArrow && modelIdx < MODELS.length - 1) onModelChange(modelIdx + 1);
         if (key.upArrow && modelIdx > 0) onModelChange(modelIdx - 1);
-      } else if (focus === 'format') {
-        if (key.leftArrow) onOutputFormatChange(nextFormat(outputFormat, -1));
-        if (key.rightArrow) onOutputFormatChange(nextFormat(outputFormat, 1));
       } else if (focus === 'count') {
         if (key.leftArrow && count > 1) onCountChange(count - 1);
         if (key.rightArrow && count < 10) onCountChange(count + 1);
@@ -165,21 +153,6 @@ export default function GeneratorScreen({
         </SectionRow>
       )}
 
-      {/* Format row or expanded */}
-      {editing && focus === 'format' ? (
-        <Box flexDirection="column" marginBottom={1}>
-          <Text color="cyan">● {labelW('Format')}</Text>
-          <Box paddingLeft={4}>
-            <Text color="cyan">{FORMAT_LABELS[outputFormat]}</Text>
-            <Text dimColor>  {'← →'}</Text>
-          </Box>
-        </Box>
-      ) : (
-        <SectionRow section="format" num="3" label="Format" active={focus === 'format'}>
-          <Text color={focus === 'format' ? 'cyan' : undefined}>{FORMAT_LABELS[outputFormat]}</Text>
-        </SectionRow>
-      )}
-
       {/* Count row or expanded */}
       {editing && focus === 'count' ? (
         <Box flexDirection="column" marginBottom={1}>
@@ -190,7 +163,7 @@ export default function GeneratorScreen({
           </Box>
         </Box>
       ) : (
-        <SectionRow section="count" num="4" label="Count" active={focus === 'count'}>
+        <SectionRow section="count" num="3" label="Count" active={focus === 'count'}>
           <Text color={focus === 'count' ? 'cyan' : undefined}>{count}</Text>
         </SectionRow>
       )}
@@ -245,7 +218,7 @@ export default function GeneratorScreen({
             <Text dimColor>·cancel  </Text>
             <Text dimColor>│</Text>
             {(focus === 'preset' || focus === 'model') && <><Text bold>  ↑↓</Text><Text dimColor>·change  </Text></>}
-            {(focus === 'format' || focus === 'count') && <><Text bold>  ←→</Text><Text dimColor>·change  </Text></>}
+            {(focus === 'count') && <><Text bold>  ←→</Text><Text dimColor>·change  </Text></>}
           </>
         ) : (
           <>

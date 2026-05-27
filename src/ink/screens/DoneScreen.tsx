@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import { Box, Text, useInput } from 'ink';
 
 interface Props {

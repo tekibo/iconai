@@ -1,80 +1,74 @@
-<pre>
-██╗ ██████╗ ██████╗ ███╗   ██╗ █████╗ ██╗
-██║██╔════╝██╔═══██╗████╗  ██║██╔══██╗██║
-██║██║     ██║   ██║██╔██╗ ██║███████║██║
-██║██║     ██║   ██║██║╚██╗██║██╔══██╗██║
-██║╚██████╗╚██████╔╝██║ ╚████║██║  ██║██║
-╚═╝ ╚═════╝ ╚═════╝ ╚═╝  ╚═══╝╚═╝  ╚═══╝
-</pre>
+# 🎨 iconai
 
-AI-powered icon generation for mobile and web, in your terminal.
+**The zero-dependency, AI-powered icon generator for mobile, web, and desktop apps.**
 
----
+`iconai` is a terminal-based CLI that leverages cutting-edge AI models (xAI Grok, Google Imagen, ByteDance Seedream, Recraft) to generate production-ready application icons, favicons, and splash screens right from your command line.
 
-## Quick start
+No native dependencies, no C++ compilation (`node-gyp`), and no bloated post-install scripts. It's built in pure TypeScript and runs flawlessly on Node.js.
+
+## ✨ Features
+
+- 🚀 **Zero Native Dependencies:** Works instantly via `npx` without downloading precompiled binaries like Sharp or Canvas.
+- 📱 **Smart Presets:** Automatically sizes and formats images for iOS, Android, Desktop, and Web.
+- 🎯 **Prompt Engineering Engine:** You type a simple idea ("a cute robot"), and the CLI automatically injects lighting, stylization, and material parameters to make it look like a professional app icon.
+- 🖼️ **Auto-Formatting:** 
+  - **Mobile/Banner Presets:** Auto-saves as pristine `.png`.
+  - **Desktop/Web Presets:** Auto-generates **both** a pristine `.png` and a multi-sized Windows `.ico` file automatically!
+
+## 📦 Usage
+
+You don't even need to install it. Just run it directly via `npx` or `pnpm dlx`!
 
 ```bash
 npx iconai
+# or
 pnpm dlx iconai
-bunx iconai
 ```
 
-Requires Node.js 18+.
+### Initial Setup
 
----
+On your first run, the CLI will ask for an **AI Gateway API Key**.
+`iconai` uses the Vercel AI SDK to communicate with models. You will need a compatible API key (such as an OpenAI, Anthropic, or compatible gateway key) to generate images.
 
-## Usage
+*(The key is securely stored locally in `~/.iconai/config.json`)*
 
-Press `c` to set your API key on first use, then enter a prompt to generate icons, splash screens, banners and more.
+## 🎮 How it Works
 
-| Key              | Action                       |
-|------------------|------------------------------|
-| `↑ ↓`            | Move between fields          |
-| `→ ←`            | Change format / count        |
-| `Enter`          | Edit a field / generate      |
-| `Esc`            | Cancel editing               |
-| `c`              | Configure API key            |
-| `q`              | Quit                         |
+The CLI provides a gorgeous interactive terminal UI. 
 
-### Presets
+1. **Select a Preset:**
+   - App Store Icon (1024x1024) -> `.png`
+   - Play Store Icon (512x512) -> `.png`
+   - Web Icon (256x256) -> `.png` + `.ico`
+   - Desktop Icon (512x512) -> `.png` + `.ico`
+   - Splash Screen (1080x1920) -> `.png`
+   - Play Store Banner (1024x500) -> `.png`
+2. **Select a Model:** Choose from Grok, Imagen 4.0, Seedream, or Recraft.
+3. **Set Image Count:** Generate up to 10 variations at once.
+4. **Type a Prompt:** Describe your icon (e.g., "A minimalist geometric fox").
+5. **Generate:** The CLI streams the generation and automatically saves the perfectly sized and formatted files to the `./assets` directory in your current folder!
 
-| Preset              | Size       | Ratio   | Default format | Notes                   |
-|---------------------|------------|---------|----------------|-------------------------|
-| App Store Icon      | 1024×1024  | 1:1     | PNG            | iOS App Store           |
-| Play Store Icon     | 512×512    | 1:1     | PNG            | Android Play Store      |
-| Splash Screen       | 1080×1920  | 9:16    | PNG            | Android splash          |
-| Play Store Banner   | 1024×500   | 16:9    | PNG            | Feature graphic         |
-| Web Icon            | 256×256    | 1:1     | ICO            | Favicon + web app icon  |
-| Desktop Icon        | 512×512    | 1:1     | ICO            | Desktop application     |
+## 🛠️ Development
 
-The format automatically defaults to **ICO** for web and desktop presets, and **PNG** for everything else. You can override it with `← →` in the format field.
-
-### Supported formats
-
-PNG, JPEG, WebP, ICO.
-
-### Supported Models
-
-Grok Imagine, Seedream, Imagen, Recraft
-
----
-
-## API key
-
-**Vercel AI gateway API** key is required for AI generation. Stored locally at `~/.iconai/config.json`. Press `c` from the generator to set or update it.
-
----
-
-## Development
+Want to contribute or hack on `iconai` locally?
 
 ```bash
-pnpm install
-pnpm run dev      # run from source via tsx
-pnpm run build    # bundle with tsup → dist/index.js
+git clone https://github.com/tekibo/iconai.git
+cd iconai
+
+# Install dependencies
+bun install
+
+# Run the interactive dev environment
+bun run dev
+
+# Run the test suite (100% coverage!)
+bun test --coverage
+
+# Build the distributable Node.js package
+bun run build
 ```
 
----
+## 📝 License
 
-## License
-
-MIT
+MIT © Tekibo

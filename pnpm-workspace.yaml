@@ -1,5 +1,2 @@
 allowBuilds:
   esbuild: true
-  sharp: true
-minimumReleaseAgeExclude:
-  - ink@7.0.4

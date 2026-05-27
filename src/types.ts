@@ -1,5 +1,4 @@
 export type IconPreset = 'app-store-icon' | 'play-store-icon' | 'splash' | 'banner' | 'web-icon' | 'desktop-icon';
-export type OutputFormat = 'png' | 'jpeg' | 'webp' | 'ico';
 
 export type PresetDefinition = {
   label: string;
@@ -7,7 +6,6 @@ export type PresetDefinition = {
   height: number;
   aspectRatio: `${number}:${number}`;
   description: string;
-  defaultFormat?: OutputFormat;
 };
 
 export const PRESET_DEFINITIONS: Record<IconPreset, PresetDefinition> = {
@@ -44,18 +42,22 @@ export const PRESET_DEFINITIONS: Record<IconPreset, PresetDefinition> = {
     width: 256,
     height: 256,
     aspectRatio: '1:1',
-    description: 'Website favicon & web app icon (256x256, defaults to .ico)',
-    defaultFormat: 'ico',
+    description: 'Website favicon & web app icon (256x256, saves as .png and .ico)',
   },
   'desktop-icon': {
     label: 'Desktop Icon',
     width: 512,
     height: 512,
     aspectRatio: '1:1',
-    description: 'Desktop application icon (512x512, defaults to .ico)',
-    defaultFormat: 'ico',
+    description: 'Desktop application icon (512x512, saves as .png and .ico)',
   },
 };
+
+export type GatewayImageModelId =
+  | 'xai/grok-imagine-image'
+  | 'bytedance/seedream-4.0'
+  | 'google/imagen-4.0-fast-generate-001'
+  | 'recraft/recraft-v4.1';
 
 export type ModelId = typeof MODELS[number]['id'];
 
@@ -73,18 +75,11 @@ export type ConfigData = {
 
 export const PRESET_KEYS: IconPreset[] = ['app-store-icon', 'play-store-icon', 'splash', 'banner', 'web-icon', 'desktop-icon'];
 
-export const FORMAT_LABELS: Record<OutputFormat, string> = {
-  png: 'PNG',
-  jpeg: 'JPEG',
-  webp: 'WebP',
-  ico: 'ICO',
-};
-
-export type GenerationOptions = {
-  prompt: string;
-  preset: IconPreset;
+export interface GenerationOptions {
   model: ModelId;
-  numImages: number;
-  rawPrompt: boolean;
+  preset: IconPreset;
+  prompt: string;
   isTransparent: boolean;
-};
+  rawPrompt: boolean;
+  numImages: number;
+}
